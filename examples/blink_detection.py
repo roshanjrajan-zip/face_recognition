@@ -157,19 +157,19 @@ def get_ear(  # pyright: ignore[reportUnknownParameterType]
     # compute the euclidean distances between the two sets of
     # vertical eye landmarks (x, y)-coordinates
     A = dist.euclidean(  # pyright: ignore[reportUnknownMemberType,reportUnknownVariableType]
-        eye[1],
-        eye[5],
+        eye[1], # pyright: ignore[reportUnknownArgumentType]
+        eye[5], # pyright: ignore[reportUnknownArgumentType]
     )
     B = dist.euclidean(  # pyright: ignore[reportUnknownMemberType,reportUnknownVariableType]
-        eye[2],
-        eye[4],
+        eye[2], # pyright: ignore[reportUnknownArgumentType]
+        eye[4], # pyright: ignore[reportUnknownArgumentType]
     )
 
     # compute the euclidean distance between the horizontal
     # eye landmark (x, y)-coordinates
     C = dist.euclidean(  # pyright: ignore[reportUnknownMemberType,reportUnknownVariableType]
-        eye[0],
-        eye[3],
+        eye[0], # pyright: ignore[reportUnknownArgumentType]
+        eye[3], # pyright: ignore[reportUnknownArgumentType]
     )
 
     # compute the eye aspect ratio
