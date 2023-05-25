@@ -14,16 +14,18 @@
 
 import face_recognition
 from flask import (
-    Flask,
+    Flask,  # pyright: ignore[reportUnknownVariableType]
     jsonify,  # pyright: ignore[reportUnknownVariableType]
-    request,
+    request,  # pyright: ignore[reportUnknownVariableType]
     redirect,  # pyright: ignore[reportUnknownVariableType]
 )
 
 # You can change this to any folder on your system
 ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg", "gif"}
 
-app = Flask(__name__)
+app = Flask(  # pyright: ignore[reportUnknownVariableType]
+    __name__,  # pyright: ignore[reportUnknownVariableType]
+)  # pyright: ignore[reportUnknownVariableType]
 
 
 def allowed_file(
@@ -39,7 +41,7 @@ def allowed_file(
     )
 
 
-@app.route(  # pyright: ignore[reportUnknownMemberType]
+@app.route(  # pyright: ignore[reportUnknownMemberType,reportUntypedFunctionDecorator]
     "/",
     methods=[
         "GET",
@@ -48,23 +50,27 @@ def allowed_file(
 )
 def upload_image():  # pyright: ignore[reportUnknownParameterType]  # pyright: ignore[reportUnknownParameterType]
     # 检测图片是否上传成功
-    if request.method == "POST":
-        if "file" not in request.files:
-            return redirect(request.url)
+    if request.method == "POST":  # pyright: ignore[reportUnknownMemberType]
+        if "file" not in request.files:  # pyright: ignore[reportUnknownMemberType]
+            return redirect(  # pyright: ignore[reportUnknownMemberType,reportUnknownVariableType]
+                request.url,  # pyright: ignore[reportUnknownMemberType,reportUnknownVariableType]
+            )  # pyright: ignore[reportUnknownMemberType,reportUnknownVariableType]
 
-        file = request.files[  # pyright: ignore[reportGeneralTypeIssues,reportUnknownVariableType]
+        file = request.files[  # pyright: ignore[reportGeneralTypeIssues,reportUnknownMemberType,reportUnknownVariableType]
             "file"
         ]
 
         if file.filename == "":  # pyright: ignore[reportUnknownMemberType]
-            return redirect(request.url)
+            return redirect(  # pyright: ignore[reportUnknownMemberType,reportUnknownVariableType]
+                request.url,  # pyright: ignore[reportUnknownMemberType,reportUnknownVariableType]
+            )  # pyright: ignore[reportUnknownMemberType,reportUnknownVariableType]
 
         if file and allowed_file(
-            file.filename,  # pyright: ignore[reportUnknownMemberType]
+            file.filename,  # pyright: ignore[reportUnknownArgumentType,reportUnknownMemberType]
         ):
             # 图片上传成功，检测图片中的人脸
             return detect_faces_in_image(  # pyright: ignore[reportUnknownVariableType]
-                file,
+                file,  # pyright: ignore[reportUnknownArgumentType]
             )
 
     # 图片上传失败，输出以下html代码

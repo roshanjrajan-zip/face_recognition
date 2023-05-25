@@ -20,24 +20,30 @@ face_detector = (  # pyright: ignore[reportUnknownVariableType]
     dlib.get_frontal_face_detector()  # pyright: ignore[reportGeneralTypeIssues,reportUnknownMemberType]
 )
 
-predictor_68_point_model = face_recognition_models.pose_predictor_model_location()
+predictor_68_point_model = ( # pyright: ignore[reportUnknownVariableType]
+    face_recognition_models.pose_predictor_model_location()  # pyright: ignore[reportUnknownMemberType,reportUnknownVariableType]
+)  # pyright: ignore[reportUnknownMemberType,reportUnknownVariableType]
 pose_predictor_68_point = dlib.shape_predictor(  # pyright: ignore[reportGeneralTypeIssues,reportUnknownMemberType,reportUnknownVariableType]
     predictor_68_point_model,
 )
 
-predictor_5_point_model = (
-    face_recognition_models.pose_predictor_five_point_model_location()
+predictor_5_point_model = (  # pyright: ignore[reportUnknownVariableType]
+    face_recognition_models.pose_predictor_five_point_model_location()  # pyright: ignore[reportUnknownMemberType]  # pyright: ignore[reportUnknownMemberType]
 )
 pose_predictor_5_point = dlib.shape_predictor(  # pyright: ignore[reportGeneralTypeIssues,reportUnknownMemberType,reportUnknownVariableType]
     predictor_5_point_model,
 )
 
-cnn_face_detection_model = face_recognition_models.cnn_face_detector_model_location()
+cnn_face_detection_model = ( # pyright: ignore[reportUnknownVariableType]
+    face_recognition_models.cnn_face_detector_model_location()  # pyright: ignore[reportUnknownMemberType,reportUnknownVariableType]
+)  # pyright: ignore[reportUnknownMemberType,reportUnknownVariableType]
 cnn_face_detector = dlib.cnn_face_detection_model_v1(  # pyright: ignore[reportGeneralTypeIssues,reportUnknownMemberType,reportUnknownVariableType]
     cnn_face_detection_model,
 )
 
-face_recognition_model = face_recognition_models.face_recognition_model_location()
+face_recognition_model = ( # pyright: ignore[reportUnknownVariableType]
+    face_recognition_models.face_recognition_model_location()  # pyright: ignore[reportUnknownMemberType,reportUnknownVariableType]
+)  # pyright: ignore[reportUnknownMemberType,reportUnknownVariableType]
 face_encoder = dlib.face_recognition_model_v1(  # pyright: ignore[reportGeneralTypeIssues,reportUnknownMemberType,reportUnknownVariableType]
     face_recognition_model,
 )
@@ -273,7 +279,7 @@ def batch_face_locations(  # pyright: ignore[reportUnknownParameterType]
             for face in detections  # pyright: ignore[reportUnknownVariableType]
         ]
 
-    raw_detections_batched = (   # pyright: ignore[reportUnknownVariableType]
+    raw_detections_batched = (  # pyright: ignore[reportUnknownVariableType]
         _raw_face_locations_batched(
             images,  # pyright: ignore[reportUnknownArgumentType]
             number_of_times_to_upsample,
@@ -295,7 +301,7 @@ def _raw_face_landmarks(  # pyright: ignore[reportUnknownParameterType]
     model="large",  # pyright: ignore[reportMissingParameterType]
 ):
     if face_locations is None:
-        face_locations = ( # pyright: ignore[reportUnknownVariableType]
+        face_locations = (  # pyright: ignore[reportUnknownVariableType]
             _raw_face_locations(
                 face_image,  # pyright: ignore[reportUnknownArgumentType]
             )

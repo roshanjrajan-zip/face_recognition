@@ -15,6 +15,7 @@
     "reportMissingTypeArgument": "error",
     "reportMissingTypeStubs": "none",
     "reportSelfClsParameterName": "none",
+    "reportShadowedImports": "warning",
     "reportTypeCommentUsage": "error",
     "reportUnknownArgumentType": "error",
     "reportUnknownLambdaType": "error",
@@ -29,5 +30,6 @@
     "reportUntypedClassDecorator": "error",
     "reportUntypedFunctionDecorator": "error",
     "reportUntypedNamedTuple": "error",
-    "useLibraryCodeForTypes": true
+    "useLibraryCodeForTypes": false,
+    "autoSearchPaths": false
 }
