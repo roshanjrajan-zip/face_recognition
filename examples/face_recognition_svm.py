@@ -28,7 +28,7 @@ Structure:
 """
 
 import face_recognition
-from sklearn import svm
+from sklearn import svm  # pyright: ignore[reportUnknownVariableType]
 import os
 
 # Training the SVC classifier
@@ -38,7 +38,7 @@ encodings = []
 names = []
 
 # Training directory
-train_dir = os.listdir('/train_dir/')
+train_dir = os.listdir("/train_dir/")
 
 # Loop through each person in the training directory
 for person in train_dir:
@@ -47,33 +47,76 @@ for person in train_dir:
     # Loop through each training image for the current person
     for person_img in pix:
         # Get the face encodings for the face in each image file
-        face = face_recognition.load_image_file("/train_dir/" + person + "/" + person_img)
-        face_bounding_boxes = face_recognition.face_locations(face)
+        face = face_recognition.load_image_file(  # pyright: ignore[reportUnknownMemberType]
+            "/train_dir/" + person + "/" + person_img,
+        )
+        face_bounding_boxes = face_recognition.face_locations(  # pyright: ignore[reportUnknownMemberType,reportUnknownVariableType]
+            face,
+        )
 
-        #If training image contains exactly one face
-        if len(face_bounding_boxes) == 1:
-            face_enc = face_recognition.face_encodings(face)[0]
+        # If training image contains exactly one face
+        if (
+            len(
+                face_bounding_boxes,  # pyright: ignore[reportUnknownArgumentType]
+            )
+            == 1
+        ):
+            face_enc = face_recognition.face_encodings(  # pyright: ignore[reportUnknownMemberType,reportUnknownVariableType]
+                face,
+            )[
+                0
+            ]
             # Add face encoding for current image with corresponding label (name) to the training data
-            encodings.append(face_enc)
-            names.append(person)
+            encodings.append(  # pyright: ignore[reportUnknownMemberType]
+                face_enc,
+            )
+            names.append(  # pyright: ignore[reportUnknownMemberType]
+                person,
+            )
         else:
-            print(person + "/" + person_img + " was skipped and can't be used for training")
+            print(
+                person
+                + "/"
+                + person_img
+                + " was skipped and can't be used for training"
+            )
 
 # Create and train the SVC classifier
-clf = svm.SVC(gamma='scale')
-clf.fit(encodings,names)
+clf = svm.SVC(  # pyright: ignore[reportUnknownMemberType,reportUnknownVariableType]
+    gamma="scale",
+)
+clf.fit(  # pyright: ignore[reportUnknownMemberType]
+    encodings,
+    names,
+)
 
 # Load the test image with unknown faces into a numpy array
-test_image = face_recognition.load_image_file('test_image.jpg')
+test_image = (
+    face_recognition.load_image_file(  # pyright: ignore[reportUnknownMemberType]
+        "test_image.jpg",
+    )
+)
 
 # Find all the faces in the test image using the default HOG-based model
-face_locations = face_recognition.face_locations(test_image)
-no = len(face_locations)
+face_locations = face_recognition.face_locations(  # pyright: ignore[reportUnknownMemberType,reportUnknownVariableType]
+    test_image,
+)
+no = len(
+    face_locations,  # pyright: ignore[reportUnknownArgumentType]
+)
 print("Number of faces detected: ", no)
 
 # Predict all the faces in the test image using the trained classifier
 print("Found:")
 for i in range(no):
-    test_image_enc = face_recognition.face_encodings(test_image)[i]
-    name = clf.predict([test_image_enc])
-    print(*name)
+    test_image_enc = face_recognition.face_encodings(  # pyright: ignore[reportUnknownMemberType,reportUnknownVariableType]
+        test_image,
+    )[
+        i
+    ]
+    name = clf.predict(  # pyright: ignore[reportUnknownMemberType,reportUnknownVariableType]
+        [test_image_enc],
+    )
+    print(
+        *name,  # pyright: ignore[reportUnknownArgumentType]
+    )

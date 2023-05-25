@@ -11,14 +11,24 @@ import picamera
 import numpy as np
 
 # 你需要在sudo raspi-config中把camera功能打开
-camera = picamera.PiCamera()
+camera = (  # pyright: ignore[reportUnknownVariableType]
+    picamera.PiCamera()  # pyright: ignore[reportUnknownMemberType]
+)
 camera.resolution = (320, 240)
 output = np.empty((240, 320, 3), dtype=np.uint8)
 
 # 载入样本图片（奥巴马和拜登）
 print("Loading known face image(s)")
-obama_image = face_recognition.load_image_file("obama_small.jpg")
-obama_face_encoding = face_recognition.face_encodings(obama_image)[0]
+obama_image = (
+    face_recognition.load_image_file(  # pyright: ignore[reportUnknownMemberType]
+        "obama_small.jpg",
+    )
+)
+obama_face_encoding = face_recognition.face_encodings(  # pyright: ignore[reportUnknownMemberType,reportUnknownVariableType]
+    obama_image,
+)[
+    0
+]
 
 # 初始化变量
 face_locations = []
@@ -27,17 +37,36 @@ face_encodings = []
 while True:
     print("Capturing image.")
     # 以numpy array的数据结构从picamera摄像头中获取一帧图片
-    camera.capture(output, format="rgb")
+    camera.capture(  # pyright: ignore[reportUnknownMemberType]
+        output,
+        format="rgb",
+    )
 
     # 获得所有人脸的位置以及它们的编码
-    face_locations = face_recognition.face_locations(output)
-    print("Found {} faces in image.".format(len(face_locations)))
-    face_encodings = face_recognition.face_encodings(output, face_locations)
+    face_locations = face_recognition.face_locations(  # pyright: ignore[reportUnknownMemberType,reportUnknownVariableType]
+        output,
+    )
+    print(
+        "Found {} faces in image.".format(
+            len(
+                face_locations,  # pyright: ignore[reportUnknownArgumentType]
+            ),
+        ),
+    )
+    face_encodings = face_recognition.face_encodings(  # pyright: ignore[reportUnknownMemberType,reportUnknownVariableType]
+        output,
+        face_locations,
+    )
 
     # 将每一个人脸与已知样本图片比对
-    for face_encoding in face_encodings:
+    for face_encoding in face_encodings:  # pyright: ignore[reportUnknownVariableType]
         # 看是否属于奥巴马或者拜登
-        match = face_recognition.compare_faces([obama_face_encoding], face_encoding)
+        match = (
+            face_recognition.compare_faces(  # pyright: ignore[reportUnknownMemberType]
+                [obama_face_encoding],
+                face_encoding,
+            )
+        )
         name = "<Unknown Person>"
 
         if match[0]:

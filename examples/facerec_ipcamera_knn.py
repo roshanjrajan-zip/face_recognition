@@ -35,20 +35,28 @@ $ pip3 install opencv-contrib-python
 
 import cv2
 import math
-from sklearn import neighbors
+from sklearn import neighbors  # pyright: ignore[reportUnknownVariableType]
 import os
 import os.path
 import pickle
 from PIL import Image, ImageDraw
 import face_recognition
-from face_recognition.face_recognition_cli import image_files_in_folder
+from face_recognition.face_recognition_cli import (
+    image_files_in_folder,  # pyright: ignore[reportUnknownVariableType]
+)
 import numpy as np
 
 
-ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'JPG'}
+ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg", "JPG"}
 
 
-def train(train_dir, model_save_path=None, n_neighbors=None, knn_algo='ball_tree', verbose=False):
+def train(  # pyright: ignore[reportUnknownParameterType]
+    train_dir,  # pyright: ignore[reportMissingParameterType,reportUnknownParameterType]
+    model_save_path=None,  # pyright: ignore[reportMissingParameterType,reportUnknownParameterType]
+    n_neighbors=None,  # pyright: ignore[reportMissingParameterType,reportUnknownParameterType]
+    knn_algo="ball_tree",  # pyright: ignore[reportMissingParameterType]
+    verbose=False,  # pyright: ignore[reportMissingParameterType]
+):
     """
     Trains a k-nearest neighbors classifier for face recognition.
 
@@ -77,23 +85,65 @@ def train(train_dir, model_save_path=None, n_neighbors=None, knn_algo='ball_tree
     y = []
 
     # Loop through each person in the training set
-    for class_dir in os.listdir(train_dir):
-        if not os.path.isdir(os.path.join(train_dir, class_dir)):
+    for class_dir in os.listdir(  # pyright: ignore[reportUnknownVariableType]
+        train_dir,  # pyright: ignore[reportUnknownArgumentType]
+    ):
+        if not os.path.isdir(
+            os.path.join(  # pyright: ignore[reportUnknownArgumentType]
+                train_dir,  # pyright: ignore[reportUnknownArgumentType]
+                class_dir,  # pyright: ignore[reportUnknownArgumentType]
+            ),
+        ):
             continue
 
         # Loop through each training image for the current person
-        for img_path in image_files_in_folder(os.path.join(train_dir, class_dir)):
-            image = face_recognition.load_image_file(img_path)
-            face_bounding_boxes = face_recognition.face_locations(image)
+        for (
+            img_path
+        ) in image_files_in_folder(  # pyright: ignore[reportUnknownVariableType]
+            os.path.join(  # pyright: ignore[reportUnknownArgumentType]
+                train_dir,  # pyright: ignore[reportUnknownArgumentType]
+                class_dir,  # pyright: ignore[reportUnknownArgumentType]
+            ),
+        ):
+            image = face_recognition.load_image_file(  # pyright: ignore[reportUnknownMemberType]
+                img_path,  # pyright: ignore[reportUnknownArgumentType]
+            )
+            face_bounding_boxes = face_recognition.face_locations(  # pyright: ignore[reportUnknownMemberType,reportUnknownVariableType]
+                image,
+            )
 
-            if len(face_bounding_boxes) != 1:
+            if (
+                len(
+                    face_bounding_boxes,  # pyright: ignore[reportUnknownArgumentType]
+                )
+                != 1
+            ):
                 # If there are no people (or too many people) in a training image, skip the image.
                 if verbose:
-                    print("Image {} not suitable for training: {}".format(img_path, "Didn't find a face" if len(face_bounding_boxes) < 1 else "Found more than one face"))
+                    print(
+                        "Image {} not suitable for training: {}".format(
+                            img_path,  # pyright: ignore[reportUnknownArgumentType]
+                            "Didn't find a face"
+                            if len(
+                                face_bounding_boxes,  # pyright: ignore[reportUnknownArgumentType]
+                            )
+                            < 1
+                            else "Found more than one face",
+                        ),
+                    )
             else:
                 # Add face encoding for current image to the training set
-                X.append(face_recognition.face_encodings(image, known_face_locations=face_bounding_boxes)[0])
-                y.append(class_dir)
+                X.append(  # pyright: ignore[reportUnknownMemberType]
+                    face_recognition.face_encodings(  # pyright: ignore[reportUnknownMemberType]
+                        image,
+                        known_face_locations=face_bounding_boxes,
+                    )[
+                        0
+                    ],
+                )
+                y.append(  # pyright: ignore[reportUnknownMemberType]
+                    class_dir,  # pyright: ignore[reportUnknownArgumentType]
+                )
 
     # Determine how many neighbors to use for weighting in the KNN classifier
     if n_neighbors is None:
@@ -102,18 +152,33 @@ def train(train_dir, model_save_path=None, n_neighbors=None, knn_algo='ball_tree
             print("Chose n_neighbors automatically:", n_neighbors)
 
     # Create and train the KNN classifier
-    knn_clf = neighbors.KNeighborsClassifier(n_neighbors=n_neighbors, algorithm=knn_algo, weights='distance')
-    knn_clf.fit(X, y)
+    knn_clf = neighbors.KNeighborsClassifier(  # pyright: ignore[reportUnknownMemberType,reportUnknownVariableType]
+        n_neighbors=n_neighbors,
+        algorithm=knn_algo,
+        weights="distance",
+    )
+    knn_clf.fit(  # pyright: ignore[reportUnknownMemberType]
+        X,
+        y,
+    )
 
     # Save the trained KNN classifier
     if model_save_path is not None:
-        with open(model_save_path, 'wb') as f:
+        with open(
+            model_save_path,  # pyright: ignore[reportUnknownArgumentType]
+            "wb",
+        ) as f:
             pickle.dump(knn_clf, f)
 
-    return knn_clf
+    return knn_clf  # pyright: ignore[reportUnknownVariableType]
 
 
-def predict(X_frame, knn_clf=None, model_path=None, distance_threshold=0.5):
+def predict(  # pyright: ignore[reportUnknownParameterType]
+    X_frame,  # pyright: ignore[reportMissingParameterType,reportUnknownParameterType]
+    knn_clf=None,  # pyright: ignore[reportMissingParameterType,reportUnknownParameterType]
+    model_path=None,  # pyright: ignore[reportMissingParameterType,reportUnknownParameterType]
+    distance_threshold=0.5,  # pyright: ignore[reportMissingParameterType]
+):
     """
     Recognizes faces in given image using a trained KNN classifier
 
@@ -126,31 +191,78 @@ def predict(X_frame, knn_clf=None, model_path=None, distance_threshold=0.5):
         For faces of unrecognized persons, the name 'unknown' will be returned.
     """
     if knn_clf is None and model_path is None:
-        raise Exception("Must supply knn classifier either thourgh knn_clf or model_path")
+        raise Exception(
+            "Must supply knn classifier either thourgh knn_clf or model_path"
+        )
 
     # Load a trained KNN model (if one was passed in)
     if knn_clf is None:
-        with open(model_path, 'rb') as f:
-            knn_clf = pickle.load(f)
+        with open(
+            model_path,  # pyright: ignore[reportGeneralTypeIssues]
+            "rb",
+        ) as f:  # pyright: ignore[reportUnknownVariableType]
+            knn_clf = pickle.load(
+                f,  # pyright: ignore[reportUnknownArgumentType]
+            )
 
-    X_face_locations = face_recognition.face_locations(X_frame)
+    X_face_locations = face_recognition.face_locations(  # pyright: ignore[reportUnknownMemberType,reportUnknownVariableType]
+        X_frame,  # pyright: ignore[reportUnknownArgumentType]
+    )
 
     # If no faces are found in the image, return an empty result.
-    if len(X_face_locations) == 0:
-        return []
+    if (
+        len(
+            X_face_locations,  # pyright: ignore[reportUnknownArgumentType]
+        )
+        == 0
+    ):
+        return []  # pyright: ignore[reportUnknownVariableType]
 
     # Find encodings for faces in the test image
-    faces_encodings = face_recognition.face_encodings(X_frame, known_face_locations=X_face_locations)
+    faces_encodings = face_recognition.face_encodings(  # pyright: ignore[reportUnknownMemberType,reportUnknownVariableType]
+        X_frame,  # pyright: ignore[reportUnknownArgumentType]
+        known_face_locations=X_face_locations,
+    )
 
     # Use the KNN model to find the best matches for the test face
-    closest_distances = knn_clf.kneighbors(faces_encodings, n_neighbors=1)
-    are_matches = [closest_distances[0][i][0] <= distance_threshold for i in range(len(X_face_locations))]
+    closest_distances = knn_clf.kneighbors(  # pyright: ignore[reportUnknownMemberType,reportUnknownVariableType]
+        faces_encodings,
+        n_neighbors=1,
+    )
+    are_matches = [  # pyright: ignore[reportUnknownVariableType]
+        closest_distances[0][i][0] <= distance_threshold
+        for i in range(
+            len(
+                X_face_locations,  # pyright: ignore[reportUnknownArgumentType]
+            ),
+        )
+    ]
 
     # Predict classes and remove classifications that aren't within the threshold
-    return [(pred, loc) if rec else ("unknown", loc) for pred, loc, rec in zip(knn_clf.predict(faces_encodings), X_face_locations, are_matches)]
+    return [  # pyright: ignore[reportUnknownVariableType]
+        (
+            pred,
+            loc,
+        )
+        if rec
+        else (
+            "unknown",
+            loc,
+        )
+        for pred, loc, rec in zip(  # pyright: ignore[reportGeneralTypeIssues,reportUnknownVariableType]
+            knn_clf.predict(  # pyright: ignore[reportUnknownArgumentType,reportUnknownMemberType]
+                faces_encodings,
+            ),
+            X_face_locations,  # pyright: ignore[reportUnknownArgumentType]
+            are_matches,  # pyright: ignore[reportUnknownArgumentType]
+        )
+    ]
 
 
-def show_prediction_labels_on_image(frame, predictions):
+def show_prediction_labels_on_image(
+    frame,  # pyright: ignore[reportMissingParameterType,reportUnknownParameterType]
+    predictions,  # pyright: ignore[reportMissingParameterType,reportUnknownParameterType]
+):
     """
     Shows the face recognition results visually.
 
@@ -158,26 +270,80 @@ def show_prediction_labels_on_image(frame, predictions):
     :param predictions: results of the predict function
     :return opencv suited image to be fitting with cv2.imshow fucntion:
     """
-    pil_image = Image.fromarray(frame)
+    pil_image = Image.fromarray(  # pyright: ignore[reportUnknownMemberType]
+        frame,  # pyright: ignore[reportUnknownArgumentType]
+    )
     draw = ImageDraw.Draw(pil_image)
 
-    for name, (top, right, bottom, left) in predictions:
+    for name, (  # pyright: ignore[reportUnknownVariableType]
+        top,  # pyright: ignore[reportUnknownVariableType]
+        right,  # pyright: ignore[reportUnknownVariableType]
+        bottom,  # pyright: ignore[reportUnknownVariableType]
+        left,  # pyright: ignore[reportUnknownVariableType]
+    ) in predictions:
         # enlarge the predictions for the full sized image.
-        top *= 2
-        right *= 2
-        bottom *= 2
-        left *= 2
+        top *= 2  # pyright: ignore[reportUnknownVariableType]
+        right *= 2  # pyright: ignore[reportUnknownVariableType]
+        bottom *= 2  # pyright: ignore[reportUnknownVariableType]
+        left *= 2  # pyright: ignore[reportUnknownVariableType]
         # Draw a box around the face using the Pillow module
-        draw.rectangle(((left, top), (right, bottom)), outline=(0, 0, 255))
+        draw.rectangle(
+            (  # pyright: ignore[reportUnknownArgumentType]
+                (left, top),
+                (right, bottom),
+            ),
+            outline=(
+                0,
+                0,
+                255,
+            ),
+        )
 
         # There's a bug in Pillow where it blows up with non-UTF-8 text
         # when using the default bitmap font
-        name = name.encode("UTF-8")
+        name = name.encode(  # pyright: ignore[reportUnknownMemberType,reportUnknownVariableType]
+            "UTF-8",
+        )
 
         # Draw a label with a name below the face
-        text_width, text_height = draw.textsize(name)
-        draw.rectangle(((left, bottom - text_height - 10), (right, bottom)), fill=(0, 0, 255), outline=(0, 0, 255))
-        draw.text((left + 6, bottom - text_height - 5), name, fill=(255, 255, 255, 255))
+        (
+            text_width,
+            text_height,
+        ) = draw.textsize(
+            name,  # pyright: ignore[reportUnknownArgumentType]
+        )
+        draw.rectangle(
+            (  # pyright: ignore[reportUnknownArgumentType]
+                (
+                    left,
+                    bottom - text_height - 10,
+                ),
+                (right, bottom),
+            ),
+            fill=(
+                0,
+                0,
+                255,
+            ),
+            outline=(
+                0,
+                0,
+                255,
+            ),
+        )
+        draw.text(  # pyright: ignore[reportUnknownMemberType]
+            (  # pyright: ignore[reportUnknownArgumentType]
+                left + 6,
+                bottom - text_height - 5,
+            ),
+            name,  # pyright: ignore[reportUnknownArgumentType]
+            fill=(
+                255,
+                255,
+                255,
+                255,
+            ),
+        )
 
     # Remove the drawing library from memory as per the Pillow docs.
     del draw
@@ -189,26 +355,56 @@ def show_prediction_labels_on_image(frame, predictions):
 
 if __name__ == "__main__":
     print("Training KNN classifier...")
-    classifier = train("knn_examples/train", model_save_path="trained_knn_model.clf", n_neighbors=2)
+    classifier = train(  # pyright: ignore[reportUnknownVariableType]
+        "knn_examples/train",
+        model_save_path="trained_knn_model.clf",
+        n_neighbors=2,
+    )
     print("Training complete!")
     # process one frame in every 30 frames for speed
     process_this_frame = 29
-    print('Setting cameras up...')
+    print("Setting cameras up...")
     # multiple cameras can be used with the format url = 'http://username:password@camera_ip:port'
-    url = 'http://admin:admin@192.168.0.106:8081/'
-    cap = cv2.VideoCapture(url)
+    url = "http://admin:admin@192.168.0.106:8081/"
+    cap = cv2.VideoCapture(  # pyright: ignore[reportUnknownMemberType,reportUnknownVariableType]
+        url,
+    )
     while 1 > 0:
-        ret, frame = cap.read()
+        (
+            ret,  # pyright: ignore[reportUnknownVariableType]
+            frame,  # pyright: ignore[reportUnknownVariableType]
+        ) = cap.read()  # pyright: ignore[reportUnknownMemberType]
         if ret:
             # Different resizing options can be chosen based on desired program runtime.
             # Image resizing for more stable streaming
-            img = cv2.resize(frame, (0, 0), fx=0.5, fy=0.5)
+            img = cv2.resize(  # pyright: ignore[reportUnknownMemberType,reportUnknownVariableType]
+                frame,
+                (
+                    0,
+                    0,
+                ),
+                fx=0.5,
+                fy=0.5,
+            )
             process_this_frame = process_this_frame + 1
             if process_this_frame % 30 == 0:
-                predictions = predict(img, model_path="trained_knn_model.clf")
-            frame = show_prediction_labels_on_image(frame, predictions)
-            cv2.imshow('camera', frame)
-            if ord('q') == cv2.waitKey(10):
-                cap.release()
-                cv2.destroyAllWindows()
+                predictions = predict(  # pyright: ignore[reportUnknownVariableType]
+                    img,  # pyright: ignore[reportUnknownArgumentType]
+                    model_path="trained_knn_model.clf",
+                )
+            frame = show_prediction_labels_on_image(
+                frame,  # pyright: ignore[reportUnknownArgumentType]
+                predictions,  # pyright: ignore[reportUnboundVariable]
+            )
+            cv2.imshow(  # pyright: ignore[reportUnknownMemberType]
+                "camera",
+                frame,
+            )
+            if ord(
+                "q",
+            ) == cv2.waitKey(  # pyright: ignore[reportUnknownMemberType]
+                10,
+            ):
+                cap.release()  # pyright: ignore[reportUnknownMemberType]  # pyright: ignore[reportUnknownMemberType]
+                cv2.destroyAllWindows()  # pyright: ignore[reportUnknownMemberType]  # pyright: ignore[reportUnknownMemberType]
                 exit(0)
