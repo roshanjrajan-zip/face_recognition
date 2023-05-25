@@ -14,7 +14,7 @@
 import face_recognition
 import cv2
 import time
-from scipy.spatial import distance as dist  # pyright: ignore[reportUnknownVariableType]
+from scipy.spatial import distance as dist
 
 EYES_CLOSED_SECONDS = 5
 
@@ -106,16 +106,14 @@ def main():
                     small_frame,
                 )
 
-                ear_left = get_ear(  # pyright: ignore[reportUnknownVariableType]
+                ear_left = get_ear(
                     left_eye,
                 )
-                ear_right = get_ear(  # pyright: ignore[reportUnknownVariableType]
+                ear_right = get_ear(
                     right_eye,
                 )
 
-                closed = (  # pyright: ignore[reportUnknownVariableType]
-                    ear_left < 0.2 and ear_right < 0.2
-                )
+                closed = ear_left < 0.2 and ear_right < 0.2
 
                 if closed:
                     closed_count += 1
@@ -151,32 +149,32 @@ def main():
             break
 
 
-def get_ear(  # pyright: ignore[reportUnknownParameterType]
+def get_ear(
     eye,  # pyright: ignore[reportMissingParameterType,reportUnknownParameterType]
 ):
     # compute the euclidean distances between the two sets of
     # vertical eye landmarks (x, y)-coordinates
-    A = dist.euclidean(  # pyright: ignore[reportUnknownMemberType,reportUnknownVariableType]
-        eye[1], # pyright: ignore[reportUnknownArgumentType]
-        eye[5], # pyright: ignore[reportUnknownArgumentType]
+    A = dist.euclidean(
+        eye[1],  # pyright: ignore[reportUnknownArgumentType]
+        eye[5],  # pyright: ignore[reportUnknownArgumentType]
     )
-    B = dist.euclidean(  # pyright: ignore[reportUnknownMemberType,reportUnknownVariableType]
-        eye[2], # pyright: ignore[reportUnknownArgumentType]
-        eye[4], # pyright: ignore[reportUnknownArgumentType]
+    B = dist.euclidean(
+        eye[2],  # pyright: ignore[reportUnknownArgumentType]
+        eye[4],  # pyright: ignore[reportUnknownArgumentType]
     )
 
     # compute the euclidean distance between the horizontal
     # eye landmark (x, y)-coordinates
-    C = dist.euclidean(  # pyright: ignore[reportUnknownMemberType,reportUnknownVariableType]
-        eye[0], # pyright: ignore[reportUnknownArgumentType]
-        eye[3], # pyright: ignore[reportUnknownArgumentType]
+    C = dist.euclidean(
+        eye[0],  # pyright: ignore[reportUnknownArgumentType]
+        eye[3],  # pyright: ignore[reportUnknownArgumentType]
     )
 
     # compute the eye aspect ratio
-    ear = (A + B) / (2.0 * C)  # pyright: ignore[reportUnknownVariableType]
+    ear = (A + B) / (2.0 * C)
 
     # return the eye aspect ratio
-    return ear  # pyright: ignore[reportUnknownVariableType]
+    return ear
 
 
 if __name__ == "__main__":

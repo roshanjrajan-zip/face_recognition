@@ -17,34 +17,34 @@ except Exception:
 ImageFile.LOAD_TRUNCATED_IMAGES = True
 
 face_detector = (  # pyright: ignore[reportUnknownVariableType]
-    dlib.get_frontal_face_detector()  # pyright: ignore[reportGeneralTypeIssues,reportUnknownMemberType]
+    dlib.get_frontal_face_detector()  # pyright: ignore[reportUnknownMemberType]
 )
 
-predictor_68_point_model = ( # pyright: ignore[reportUnknownVariableType]
-    face_recognition_models.pose_predictor_model_location()  # pyright: ignore[reportUnknownMemberType,reportUnknownVariableType]
-)  # pyright: ignore[reportUnknownMemberType,reportUnknownVariableType]
-pose_predictor_68_point = dlib.shape_predictor(  # pyright: ignore[reportGeneralTypeIssues,reportUnknownMemberType,reportUnknownVariableType]
+predictor_68_point_model = (  # pyright: ignore[reportUnknownVariableType]
+    face_recognition_models.pose_predictor_model_location()  # pyright: ignore[reportUnknownMemberType]
+)
+pose_predictor_68_point = dlib.shape_predictor(  # pyright: ignore[reportUnknownMemberType,reportUnknownVariableType]
     predictor_68_point_model,
 )
 
 predictor_5_point_model = (  # pyright: ignore[reportUnknownVariableType]
     face_recognition_models.pose_predictor_five_point_model_location()  # pyright: ignore[reportUnknownMemberType]  # pyright: ignore[reportUnknownMemberType]
 )
-pose_predictor_5_point = dlib.shape_predictor(  # pyright: ignore[reportGeneralTypeIssues,reportUnknownMemberType,reportUnknownVariableType]
+pose_predictor_5_point = dlib.shape_predictor(  # pyright: ignore[reportUnknownMemberType,reportUnknownVariableType]
     predictor_5_point_model,
 )
 
-cnn_face_detection_model = ( # pyright: ignore[reportUnknownVariableType]
-    face_recognition_models.cnn_face_detector_model_location()  # pyright: ignore[reportUnknownMemberType,reportUnknownVariableType]
-)  # pyright: ignore[reportUnknownMemberType,reportUnknownVariableType]
-cnn_face_detector = dlib.cnn_face_detection_model_v1(  # pyright: ignore[reportGeneralTypeIssues,reportUnknownMemberType,reportUnknownVariableType]
+cnn_face_detection_model = (  # pyright: ignore[reportUnknownVariableType]
+    face_recognition_models.cnn_face_detector_model_location()  # pyright: ignore[reportUnknownMemberType]
+)
+cnn_face_detector = dlib.cnn_face_detection_model_v1(  # pyright: ignore[reportUnknownMemberType,reportUnknownVariableType]
     cnn_face_detection_model,
 )
 
-face_recognition_model = ( # pyright: ignore[reportUnknownVariableType]
-    face_recognition_models.face_recognition_model_location()  # pyright: ignore[reportUnknownMemberType,reportUnknownVariableType]
-)  # pyright: ignore[reportUnknownMemberType,reportUnknownVariableType]
-face_encoder = dlib.face_recognition_model_v1(  # pyright: ignore[reportGeneralTypeIssues,reportUnknownMemberType,reportUnknownVariableType]
+face_recognition_model = (  # pyright: ignore[reportUnknownVariableType]
+    face_recognition_models.face_recognition_model_location()  # pyright: ignore[reportUnknownMemberType]
+)
+face_encoder = dlib.face_recognition_model_v1(  # pyright: ignore[reportUnknownMemberType,reportUnknownVariableType]
     face_recognition_model,
 )
 
@@ -75,7 +75,7 @@ def _css_to_rect(  # pyright: ignore[reportUnknownParameterType]
     :param css:  plain tuple representation of the rect in (top, right, bottom, left) order
     :return: a dlib `rect` object
     """
-    return dlib.rectangle(  # pyright: ignore[reportGeneralTypeIssues,reportUnknownMemberType,reportUnknownVariableType]
+    return dlib.rectangle(  # pyright: ignore[reportUnknownMemberType,reportUnknownVariableType]
         css[3],
         css[0],
         css[1],

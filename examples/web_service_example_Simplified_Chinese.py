@@ -24,8 +24,8 @@ from flask import (
 ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg", "gif"}
 
 app = Flask(  # pyright: ignore[reportUnknownVariableType]
-    __name__,  # pyright: ignore[reportUnknownVariableType]
-)  # pyright: ignore[reportUnknownVariableType]
+    __name__,
+)
 
 
 def allowed_file(
@@ -52,18 +52,18 @@ def upload_image():  # pyright: ignore[reportUnknownParameterType]  # pyright: i
     # 检测图片是否上传成功
     if request.method == "POST":  # pyright: ignore[reportUnknownMemberType]
         if "file" not in request.files:  # pyright: ignore[reportUnknownMemberType]
-            return redirect(  # pyright: ignore[reportUnknownMemberType,reportUnknownVariableType]
-                request.url,  # pyright: ignore[reportUnknownMemberType,reportUnknownVariableType]
-            )  # pyright: ignore[reportUnknownMemberType,reportUnknownVariableType]
+            return redirect(  # pyright: ignore[reportUnknownVariableType]
+                request.url,  # pyright: ignore[reportUnknownMemberType]
+            )
 
-        file = request.files[  # pyright: ignore[reportGeneralTypeIssues,reportUnknownMemberType,reportUnknownVariableType]
+        file = request.files[  # pyright: ignore[reportUnknownMemberType,reportUnknownVariableType]
             "file"
         ]
 
         if file.filename == "":  # pyright: ignore[reportUnknownMemberType]
-            return redirect(  # pyright: ignore[reportUnknownMemberType,reportUnknownVariableType]
-                request.url,  # pyright: ignore[reportUnknownMemberType,reportUnknownVariableType]
-            )  # pyright: ignore[reportUnknownMemberType,reportUnknownVariableType]
+            return redirect(  # pyright: ignore[reportUnknownVariableType]
+                request.url,  # pyright: ignore[reportUnknownMemberType]
+            )
 
         if file and allowed_file(
             file.filename,  # pyright: ignore[reportUnknownArgumentType,reportUnknownMemberType]

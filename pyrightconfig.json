@@ -26,6 +26,7 @@
     "reportUnnecessaryComparison": "error",
     "reportUnnecessaryContains": "error",
     "reportUnnecessaryIsInstance": "error",
+    "reportUnnecessaryTypeIgnoreComment": "error",
     "reportUntypedBaseClass": "error",
     "reportUntypedClassDecorator": "error",
     "reportUntypedFunctionDecorator": "error",
